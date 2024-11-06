@@ -28,13 +28,14 @@
             <div>{{ fila.descripcion }}</div>
             <div>
                 <span [ngClass]="{ disponible: fila.deshabilitada, ocupado: !fila.deshabilitada }"
-                       (click)="agregarPatenteSiDisponible(i)">
+                       (click)="cambiarDisponibilidadCochera(fila)">
                     {{ fila.deshabilitada ? 'DISPONIBLE' : 'NO DISPONIBLE' }}
                 </span>
             </div>
             <div class="acciones-container">
-                <button (click)="cambiarDisponibilidadCochera(i, $event)" class="boton-disponibilidad">🚫</button>
-                <button (click)="eliminarFila(i, $event)" class="boton-eliminar">🗑</button>
+                <button (click)="cambiarDisponibilidadCochera(fila)" class="boton-disponibilidad">🚫</button>
+                <button (click)="eliminarFila(i, $event)" class="boton-disponibilidad">🗑</button>
+                <button *ngIf="!fila.deshabilitada && fila.descripcion !== 'Disponible'" (click)="cobrarEstacionamiento(fila.id)" class="boton-disponibilidad">💰</button>
             </div>   
         </div> 
     </div>

@@ -1,10 +1,14 @@
 import { Estacionamiento } from "./estacionamiento";
 
 export interface Cochera {
-    cochera: { patente: any; };
     id: number,
-    descripcion: string,
     deshabilitada: boolean,
+    descripcion: string,
     eliminada: boolean,
-    activo: {patente:string} | null
+    activo: Estacionamiento|null,
+    patente?: string,
+    fechaIngreso?: string;
+    horaIngreso?: string;
+    fechaDeshabilitado?: string;
+    horaDeshabilitado?: string;
 }

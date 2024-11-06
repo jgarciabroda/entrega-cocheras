@@ -44,7 +44,11 @@ export class EstadoConcherasComponent {
         this.estacionamientos.buscarEstacionamientoActivo(cochera.id).then(estacionamiento => {
           this.filas.push({
             ...cochera,
+            deshabilitada: !estacionamiento,  // Si hay estacionamiento activo, la cochera está ocupada
             activo: estacionamiento,
+            patente: estacionamiento ? estacionamiento.patente : undefined,
+            fechaIngreso: estacionamiento ? new Date(estacionamiento.horaIngreso).toLocaleDateString() : undefined,
+            horaIngreso: estacionamiento ? new Date(estacionamiento.horaIngreso).toLocaleTimeString() : undefined,
           });
         })
       }
@@ -64,15 +68,16 @@ export class EstadoConcherasComponent {
       }
     }).then((result) => {
       if (result.isConfirmed && result.value) {
+        const now = new Date ();
         const nuevaFila: Cochera = {
           id: this.siguienteNumero,
-          descripcion: result.value,
-          deshabilitada: false,
-          eliminada: false,
-          activo: null,
-          cochera: {
-            patente: undefined
-          }
+                descripcion: result.value,
+                patente: result.value,
+                deshabilitada: false,
+                eliminada: false,
+                activo: null,
+                fechaIngreso: now.toLocaleDateString(), // Fecha de ingreso
+                horaIngreso: now.toLocaleTimeString(),   // Hora de ingreso
         };
         this.filas.push(nuevaFila);
         this.siguienteNumero += 1;
@@ -94,77 +99,110 @@ export class EstadoConcherasComponent {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.filas.splice(numeroFila, 1);  // Ya no sirve porque ahora mandamos solicitudes al backend
-        // this.cocheras.eliminarCochera //Algo asi te tiene que quedar
+        this.filas = this.filas.filter(fila => fila.id !== numeroFila);
         Swal.fire('Eliminado', 'La fila ha sido eliminada.', 'success');
       }
     });
   }
 
-  cambiarDisponibilidadCochera(numeroFila: number, event: MouseEvent) {
-    this.filas[numeroFila].deshabilitada = !this.filas[numeroFila].deshabilitada;
-    Swal.fire({
-      title: 'Disponibilidad actualizada',
-      text: this.filas[numeroFila].deshabilitada ? 'Cochera marcada como disponible.' : 'Cochera marcada como no disponible.',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false
-    });
+  cambiarDisponibilidadCochera(fila: Cochera) {
+    const now = new Date();
+    if (fila.deshabilitada) {
+        Swal.fire({
+            title: 'Ingrese la patente del vehículo',
+            input: 'text',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Por favor, ingrese una patente válida';
+                }
+                return null;
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+              this.estacionamientos.estacionarAuto(result.value, fila.id).then(() => {
+                fila.patente = result.value;
+                fila.deshabilitada = false;
+                fila.fechaIngreso = now.toLocaleDateString();
+                fila.horaIngreso = now.toLocaleTimeString();
+                fila.fechaDeshabilitado = undefined;
+                fila.horaDeshabilitado = undefined;                
+                             Swal.fire('Patente registrada', 'La cochera ahora está ocupada.', 'success');   
+              }).catch(error => {
+                console.error("Error al ocupar la cochera:", error);
+                Swal.fire("Error", "Hubo un problema al ocupar la cochera en el sistema.", "error");
+              });
+            }
+        });
+    } else {
+      this.estacionamientos.liberarCochera(fila.id).then(() => {
+        fila.deshabilitada = true;
+        fila.patente = undefined;
+        fila.fechaDeshabilitado = now.toLocaleDateString();
+        fila.horaDeshabilitado = now.toLocaleTimeString(); 
+  
+        Swal.fire('Cochera liberada', 'La cochera ahora está disponible.', 'success');
+      }).catch(error => {
+        console.error("Error al liberar la cochera", error);
+        Swal.fire("Error", "Hubo un problema al liberar la cochera en el sistema.", "error");
+      });
+    }
   }
-
-  abrirModalNuevoEstacionamiento(idCochera: number) {
-    console.log("Abriendo modal cochera", idCochera);
-    Swal.fire({
-      title: "Ingrese la patente del vehículo",
-      input: "text",
-      showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) {
-          return "Ingrese una patente válida";
-        }
+  cobrarEstacionamiento(idCochera: number) {
+    this.estacionamientos.buscarEstacionamientoActivo(idCochera).then(estacionamiento => {
+      if (!estacionamiento) {
+        Swal.fire({
+          title: "Error",
+          text: "No se encontró un estacionamiento activo para la cochera",
+          icon: "error"
+        });
         return;
       }
-    }).then(res => {
-      if (res.isConfirmed) {
-        console.log("Tengo que estacionar la patente", res.value);
-        this.estacionamientos.estacionarAuto(res.value, idCochera).then(() => {
-        });
-      }
-    });
-  }
-
-  agregarPatenteSiDisponible(numeroFila: number) {
-  const cochera = this.filas[numeroFila];
-
-  // Si la cochera está disponible, mostramos el modal para agregar la patente
-  if (cochera.deshabilitada) {
-    Swal.fire({
-      title: 'Ingrese la patente del vehículo',
-      input: 'text',
-      showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) {
-          return 'Por favor, ingrese una patente válida';
-        }
-        return null;
-      }
-    }).then((result) => {
-      if (result.isConfirmed && result.value) {
-        // Al ingresar la patente, actualizamos el estado de la cochera
-        cochera.descripcion = result.value;  // Asignamos la patente ingresada a la descripción
-        cochera.activo = { patente: result.value };  // Aquí, podrías agregar más propiedades si es necesario
-
-        Swal.fire('Patente registrada', 'La patente ha sido registrada con éxito.', 'success');
-      }
-    });
-  } else {
-    Swal.fire({
-      title: 'Cochera no disponible',
-      text: 'La cochera no está disponible para registrar una patente.',
-      icon: 'warning'
-    });
-  }
-}
-
   
+      const horaIngreso = new Date(estacionamiento.horaIngreso);
+      console.log("Hora de ingreso:", horaIngreso);  // Verifica que la fecha esté correctamente asignada
+
+    if (isNaN(horaIngreso.getTime())) {
+      // Si la hora de ingreso no es válida, mostramos un error
+      Swal.fire({
+        title: "Error",
+        text: "La hora de ingreso es inválida.",
+        icon: "error"
+      });
+      return;
+    }
+      const tiempoTranscurridoMs = new Date().getTime() - horaIngreso.getTime();
+      const horas = Math.floor(tiempoTranscurridoMs / (1000 * 60 * 60));
+      const minutos = Math.floor((tiempoTranscurridoMs % (1000 * 60 * 60)) / (1000 * 60));
+      const precio = (tiempoTranscurridoMs / 1000 / 60 / 60); 
+  
+      Swal.fire({
+        title: "Cobrar estacionamiento",
+        text: `Tiempo transcurrido: ${horas}hs ${minutos}mins - Precio: $${precio.toFixed(2)}`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#00c98d",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Cobrar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.estacionamientos.cobrarEstacionamiento(idCochera, estacionamiento.patente, precio).then(() => {
+            Swal.fire("Estacionamiento cobrado", "El estacionamiento ha sido cobrado correctamente.", "success");
+            this.traerCocheras();
+          }).catch((error: any) => {
+            console.error("Error al cobrar el estacionamiento:", error);
+            Swal.fire("Error", "Hubo un error al cobrar el estacionamiento.", "error");
+          });
+        }
+      });
+    }).catch(error => {
+      console.error("Error al buscar el estacionamiento activo:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un error al buscar el estacionamiento.",
+        icon: "error"
+      });
+    });
+  }
 }
