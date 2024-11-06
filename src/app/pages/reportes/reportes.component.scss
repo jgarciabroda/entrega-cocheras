@@ -7,7 +7,12 @@
     background-color: #f4f4f9;
 }
 
-.reportes-section {
+.tabla button img {
+    width: 45px;   
+    height: 45px;
+}
+
+.login-section {
     text-align: center;
     margin-bottom: 20px;
 
@@ -39,7 +44,7 @@
         }
     }
 
-    .reportes {
+    .reportes{
         display: inline-block;
         margin-top: 20px;
         margin-bottom: 20px;
@@ -53,21 +58,22 @@
         &:hover {
             background-color: #170d2a;
         }
+       
     }
 }
 
 .action-buttons {
-    margin-bottom: 20px;
+    margin: 20px 0;
 
     .boton-resaltado {
         padding: 10px 20px;
-        background-color: #b0b0b0; 
+        background-color: #b0b0b0;
         color: white;
         border: none;
         border-radius: 5px;
+        font-size: 1.2rem;
+        font-family:none;
         cursor: pointer;
-        font-size: 1rem;
-        font-family: none;
 
         &:hover {
             background-color: #272727;
@@ -82,12 +88,15 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
 
-    .header-tabla, .fila-tabla {
+    
+    .header-tabla, div {
         display: flex;
         justify-content: space-between;
         padding: 10px;
+        background-color: #e7e5e5;
         margin-bottom: 5px;
         text-align: center;
+    
     }
 
     .header-tabla {
@@ -95,32 +104,52 @@
         color: #333;
         font-weight: bold;
         font-size: 20px;
+        text-align: center;
+        align-items: center;
+
     }
 
-    .fila-tabla {
-        background-color: #f9f9f9; 
-        transition: background-color 0.3s;
-
-        &:hover {
-            background-color: #e0e0e0; 
-        }
-    }
-
-    .acciones-container {
-        display: flex;
-        justify-content: center;
-
-        .boton-eliminar {
-            background-color: #d9534f; 
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            padding: 5px 10px;
-
-            &:hover {
-                background-color: #c9302c; 
-            }
-        }
+    .fila-tabla{
+        background-color: #e7e5e5;
     }
 }
+
+.disponible {
+    color: green;
+    font-weight: bold;
+}
+
+.ocupado {
+    color: red;
+    font-weight: bold;
+}
+
+.acciones-container {
+    display: flex;
+    justify-content: center;
+
+    .boton-eliminar {
+        background-color: #d9534f; 
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 5px 10px;
+
+        &:hover {
+            background-color: #c9302c; 
+        }
+    }
+
+    .boton-disponibilidad{
+        background-color: #5c5454; 
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 5px 10px;
+
+        &:hover {
+            background-color: #828282; 
+        }
+    }
+    }
