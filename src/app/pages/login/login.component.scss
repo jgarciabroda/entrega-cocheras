@@ -1,0 +1,71 @@
+.container {
+    display: flex;
+    height: 100vh; 
+    background-color: #f7f7f7; 
+}
+
+.image-section {
+    width: 50%;
+    position: relative;
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7); 
+    }
+    .app-title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 65px;
+        text-align: center;
+        font-weight: bold;
+    }
+}
+
+.login-form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 0 40px;
+
+    .form-group {
+        width: 100%;
+        margin-bottom: 20px;
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1.2em;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+    }
+
+    .btn-login {
+        display: block;
+        width: 100%;
+        background-color: #686868; 
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-size: 1.2em;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-decoration: none;
+    }
+
+    .btn-register {
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #686868;
+        font-size: 1.2em;
+        text-decoration: none;
+    }
+}

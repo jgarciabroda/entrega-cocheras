@@ -1,0 +1,14 @@
+<div class="container">
+    <section class="image-section">
+        <img src="https://i.pinimg.com/originals/c4/39/1f/c4391f4cec2e2dda77fec042d7f52332.jpg" alt="Imagen de Parking">
+        <h1 class="app-title">PARKING APP</h1>
+    </section>
+    <div class="login-form">
+        <div class="form-group">
+            <input type="text" id="usuario" [(ngModel)] = "datosLogin.username" name= "usuario"placeholder="Usuario" aria-label="Nombre de usuario">
+            <input type="password" id="contraseña" placeholder="Contraseña" aria-label="Contraseña">
+        </div>
+        <button type="button" class="btn-login" (click)="Login()" >Iniciar sesión</button>
+        <a class="btn-register" [routerLink]="['/registro']">Registrarse</a>
+    </div>
+</div>

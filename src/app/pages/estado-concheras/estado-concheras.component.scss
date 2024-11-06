@@ -1,0 +1,155 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+
+.tabla button img {
+    width: 45px;   
+    height: 45px;
+}
+
+.login-section {
+    text-align: center;
+    margin-bottom: 20px;
+
+    h1 {
+        font-size: 3rem;
+        color: #333;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: 25px;
+        color: #7b7b7b;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-bottom: 10px;
+    }
+
+    .logout-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #686868;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1rem;
+
+        &:hover {
+            background-color: #c0392b;
+        }
+    }
+
+    .reportes{
+        display: inline-block;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background-color: #413b3b;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1rem;
+
+        &:hover {
+            background-color: #170d2a;
+        }
+       
+    }
+}
+
+.action-buttons {
+    margin: 20px 0;
+
+    .boton-resaltado {
+        padding: 10px 20px;
+        background-color: #b0b0b0;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2rem;
+        font-family:none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #272727;
+        }
+    }
+}
+
+.tabla {
+    width: 70%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+
+    
+    .header-tabla, div {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #e7e5e5;
+        margin-bottom: 5px;
+        text-align: center;
+    
+    }
+
+    .header-tabla {
+        background-color: #e7e5e5;
+        color: #333;
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+        align-items: center;
+
+    }
+
+    .fila-tabla{
+        background-color: #e7e5e5;
+    }
+}
+
+.disponible {
+    color: green;
+    font-weight: bold;
+}
+
+.ocupado {
+    color: red;
+    font-weight: bold;
+}
+
+.acciones-container {
+    display: flex;
+    justify-content: center;
+
+    .boton-eliminar {
+        background-color: #d9534f; 
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 5px 10px;
+
+        &:hover {
+            background-color: #c9302c; 
+        }
+    }
+
+    .boton-disponibilidad{
+        background-color: #5c5454; 
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 5px 10px;
+
+        &:hover {
+            background-color: #828282; 
+        }
+    }
+    }

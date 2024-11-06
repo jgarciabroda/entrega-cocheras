@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="login-section">
+        <h1>PARKING APP</h1>
+        <h2>ESTADO COCHERAS</h2>
+        <a class="logout-btn" [routerLink]="['/Login']">Cerrar sesión</a>
+        <div>
+            <a [routerLink]="['/reportes']" class="reportes">Reportes</a>
+        </div>
+        
+    </div>
+    
+    <div class="action-buttons">
+        <button (click)="agregarFila()" class="boton-resaltado">Agregar fila</button>
+    </div>
+
+
+    <div class="tabla">
+        <div class="header-tabla fila">
+            <div>Nro.</div>
+            <div>Descripción</div>
+            <div>Disponibilidad</div>
+            <div>Acciones</div>
+        </div>
+    
+        <div *ngFor="let fila of filas; let i = index" class="fila-tabla">
+            <div>{{ fila.id }}</div>
+            <div>{{ fila.descripcion }}</div>
+            <div>
+                <span [ngClass]="{ disponible: fila.deshabilitada, ocupado: !fila.deshabilitada }">
+                    {{ fila.deshabilitada ? 'DISPONIBLE' : 'NO DISPONIBLE' }}
+                </span>
+            </div>
+            <div class="acciones-container">
+                <button (click)="cambiarDisponibilidadCochera(i, $event)" class="boton-disponibilidad">🚫</button>
+                <button (click)="eliminarFila(i, $event)" class="boton-eliminar">🗑</button>
+            </div>   
+        </div> 
+    </div>
+    
