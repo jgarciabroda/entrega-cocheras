@@ -42,7 +42,29 @@
         &:hover {
             background-color: #c0392b;
         }
+
+        
+        
     }
+
+
+.estado {
+    display: inline-block;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background-color: #413b3b;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1rem;
+
+        &:hover {
+            background-color: #170d2a;
+        }
+       
+  }
+  
 
     .reportes{
         display: inline-block;

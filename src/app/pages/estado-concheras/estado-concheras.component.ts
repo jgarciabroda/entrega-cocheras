@@ -53,12 +53,12 @@ export class EstadoConcherasComponent {
   
   agregarFila() {
     Swal.fire({
-      title: 'Ingrese la patente del vehículo',
+      title: 'Ingrese el nombre de la cochera',
       input: 'text',
       showCancelButton: true,
       inputValidator: (value) => {
         if (!value) {
-          return 'Por favor, ingrese una patente válida';
+          return 'Por favor, ingrese un nombre válido';
         }
         return null;
       }
@@ -66,10 +66,13 @@ export class EstadoConcherasComponent {
       if (result.isConfirmed && result.value) {
         const nuevaFila: Cochera = {
           id: this.siguienteNumero,
-          descripcion: result.value, 
+          descripcion: result.value,
           deshabilitada: false,
           eliminada: false,
           activo: null,
+          cochera: {
+            patente: undefined
+          }
         };
         this.filas.push(nuevaFila);
         this.siguienteNumero += 1;
@@ -91,7 +94,8 @@ export class EstadoConcherasComponent {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.filas.splice(numeroFila, 1);
+        // this.filas.splice(numeroFila, 1);  // Ya no sirve porque ahora mandamos solicitudes al backend
+        // this.cocheras.eliminarCochera //Algo asi te tiene que quedar
         Swal.fire('Eliminado', 'La fila ha sido eliminada.', 'success');
       }
     });
@@ -128,5 +132,39 @@ export class EstadoConcherasComponent {
       }
     });
   }
+
+  agregarPatenteSiDisponible(numeroFila: number) {
+  const cochera = this.filas[numeroFila];
+
+  // Si la cochera está disponible, mostramos el modal para agregar la patente
+  if (cochera.deshabilitada) {
+    Swal.fire({
+      title: 'Ingrese la patente del vehículo',
+      input: 'text',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Por favor, ingrese una patente válida';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        // Al ingresar la patente, actualizamos el estado de la cochera
+        cochera.descripcion = result.value;  // Asignamos la patente ingresada a la descripción
+        cochera.activo = { patente: result.value };  // Aquí, podrías agregar más propiedades si es necesario
+
+        Swal.fire('Patente registrada', 'La patente ha sido registrada con éxito.', 'success');
+      }
+    });
+  } else {
+    Swal.fire({
+      title: 'Cochera no disponible',
+      text: 'La cochera no está disponible para registrar una patente.',
+      icon: 'warning'
+    });
+  }
+}
+
   
 }

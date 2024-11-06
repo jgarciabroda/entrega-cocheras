@@ -21,12 +21,14 @@
             <div>Disponibilidad</div>
             <div>Acciones</div>
         </div>
+        
     
         <div *ngFor="let fila of filas; let i = index" class="fila-tabla">
             <div>{{ fila.id }}</div>
             <div>{{ fila.descripcion }}</div>
             <div>
-                <span [ngClass]="{ disponible: fila.deshabilitada, ocupado: !fila.deshabilitada }">
+                <span [ngClass]="{ disponible: fila.deshabilitada, ocupado: !fila.deshabilitada }"
+                       (click)="agregarPatenteSiDisponible(i)">
                     {{ fila.deshabilitada ? 'DISPONIBLE' : 'NO DISPONIBLE' }}
                 </span>
             </div>
