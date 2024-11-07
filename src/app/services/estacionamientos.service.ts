@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class EstacionamientosService {
-
+ 
   auth = inject(AuthService);
 
   estacionamiento(): Promise<Estacionamiento[]> {
@@ -67,5 +67,24 @@ export class EstacionamientosService {
         throw error;
       });
   }
+
+  liberarCochera(idCochera: number) {
+    return fetch ('http://localhost:4000/estacionamientos/cerrar', {
+      method: 'PATCH',
+      headers: {
+        'content-Type': 'application/json',
+        Authorization: 'Bearer ' + (this.auth.getToken() ?? ""),
+      
+      body: JSON.stringify({idCochera})
+    }}
+
+  ).then(response => {
+    if(response.ok){
+      Swal.fire('Cochera liberada', 'La cochera se libero con exito', 'success');
+    } else {
+      Swal.fire('Error', 'No se pudo liberar la cochera. Intente nuevamente', 'error');
+    }
+  })
+}
   
 }

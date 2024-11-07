@@ -145,18 +145,15 @@ export class EstadoConcherasComponent {
         fila.fechaDeshabilitado = now.toLocaleDateString();
         fila.horaDeshabilitado = now.toLocaleTimeString();
         Swal.fire('Cochera liberada', 'La cochera ahora está disponible.', 'success');
-      }).catch(error => {
+      }).catch((error: any) => {
         console.error("Error al liberar la cochera", error);
         Swal.fire("Error", "Hubo un problema al liberar la cochera en el sistema.", "error");
       });
     }
   }
-  
 
   cobrarEstacionamiento(idCochera: number) {
     this.estacionamientos.buscarEstacionamientoActivo(idCochera).then(estacionamiento => {
-      console.log("Estacionamiento activo: ", estacionamiento);  // Verifica los datos del estacionamiento
-
       if (!estacionamiento) {
         Swal.fire({
           title: "Error",
@@ -167,24 +164,22 @@ export class EstadoConcherasComponent {
       }
   
       const horaIngreso = new Date(estacionamiento.horaIngreso);
-      console.log("Hora de ingreso:", horaIngreso);  // Verifica que la hora de ingreso sea válida
+      console.log("Hora de ingreso:", horaIngreso);  // Verifica que la fecha esté correctamente asignada
 
-      if (isNaN(horaIngreso.getTime())) {
-        Swal.fire({
-          title: "Error",
-          text: "La hora de ingreso es inválida.",
-          icon: "error"
-        });
-        return;
-      }
-
+    if (isNaN(horaIngreso.getTime())) {
+      // Si la hora de ingreso no es válida, mostramos un error
+      Swal.fire({
+        title: "Error",
+        text: "La hora de ingreso es inválida.",
+        icon: "error"
+      });
+      return;
+    }
       const tiempoTranscurridoMs = new Date().getTime() - horaIngreso.getTime();
       const horas = Math.floor(tiempoTranscurridoMs / (1000 * 60 * 60));
       const minutos = Math.floor((tiempoTranscurridoMs % (1000 * 60 * 60)) / (1000 * 60));
-      const precio = (tiempoTranscurridoMs / 1000 / 60 / 60);
-
-      console.log("Precio calculado:", precio);  // Verifica el precio calculado
-
+      const precio = (tiempoTranscurridoMs / 1000 / 60 / 60); 
+  
       Swal.fire({
         title: "Cobrar estacionamiento",
         text: `Tiempo transcurrido: ${horas}hs ${minutos}mins - Precio: $${precio.toFixed(2)}`,
@@ -199,7 +194,7 @@ export class EstadoConcherasComponent {
           this.estacionamientos.cobrarEstacionamiento(idCochera, estacionamiento.patente, precio).then(() => {
             Swal.fire("Estacionamiento cobrado", "El estacionamiento ha sido cobrado correctamente.", "success");
             this.traerCocheras();
-          }).catch((error: any) => {
+          }).catch(error => {
             console.error("Error al cobrar el estacionamiento:", error);
             Swal.fire("Error", "Hubo un error al cobrar el estacionamiento.", "error");
           });
@@ -213,7 +208,9 @@ export class EstadoConcherasComponent {
         icon: "error"
       });
     });
+  }
 }
 
-}
+
+  
   
