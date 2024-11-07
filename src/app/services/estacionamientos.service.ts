@@ -34,58 +34,38 @@ export class EstacionamientosService {
 
    estacionarAuto(patenteAuto: string, idCochera: number){
     return fetch('http://localhost:4000/cocheras', {
-      method: 'GET',
+      method: 'POST',
       headers: {
-        authorization: "Bearer" + (this.auth.getToken() ?? ''),
+        authorization: "Bearer " + (this.auth.getToken() ?? ''),
         "content-type":"application/json"
       },
       body: JSON.stringify({
         patente: patenteAuto,
-        idCochera: 2 
+        idCochera: idCochera,
+        idUsaarioIngreso: "admin"
       })
     }).then(r=>r.json())
   }
 
-  cobrarEstacionamiento(idCochera: number, patente: string, costo: number) {
-    return fetch("http://localhost:4000/estacionamientos/cerrar/", {
-      method: 'PATCH',
+  cobrarEstacionamiento(idCochera: number, patente: string, precio: number) {
+    return fetch(`http://localhost:4000/cocheras/${idCochera}`, {
+      method: 'POST',
       headers: {
-        Authorization: "Bearer " + this.auth.getToken(),
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.auth.getToken(),
       },
       body: JSON.stringify({
-        patente: patente,
         idCochera: idCochera,
-        costo: costo 
+        patente: patente,
+        precio: precio
       })
-    })
-    .then(response => {
-      if (!response.ok) {
-        return response.json().then(error => {
-          throw new Error(error.message);
-        });
-      }
-      return response.json();
-    });
-}
-
-liberarCochera(idCochera: number) {
-  return fetch ('http://localhost:4000/cocheras/liberar', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json',
-      Authorization: 'Bearer ' + (this.auth.getToken()),
-    
-    body: JSON.stringify({idCochera})
-  }}
-
-).then(response => {
-  if(response.ok){
-    Swal.fire('Cochera liberada', 'La cochera se libero con exito', 'success');
-  } else {
-    Swal.fire('Error', 'No se pudo liberar la cochera. Intente nuevamente', 'error');
+    }).then(response => response.json())
+      .then(data => {
+        return data;
+      }).catch(error => {
+        console.error('Error al cobrar el estacionamiento:', error);
+        throw error;
+      });
   }
-})
-}
-
+  
 }

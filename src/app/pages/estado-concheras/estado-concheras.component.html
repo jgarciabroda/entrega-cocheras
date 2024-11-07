@@ -32,9 +32,16 @@
                     {{ fila.deshabilitada ? 'DISPONIBLE' : 'NO DISPONIBLE' }}
                 </span>
             </div>
+            <div *ngIf="!fila.deshabilitada && fila.patente" class="informacion-patente-ingreso">
+                <div class="patente">Patente: {{ fila.patente }}</div>
+                <div class="ingreso">Ingreso: {{ fila.fechaIngreso }} {{ fila.horaIngreso }}</div>
+            </div>
+            <div *ngIf="!fila.deshabilitada && fila.fechaDeshabilitado" class="informacion-patente-ingreso">
+                <div class="deshabilitado">Deshabilitado: {{ fila.fechaDeshabilitado }} {{ fila.horaDeshabilitado }}</div>
+            </div>
             <div class="acciones-container">
                 <button (click)="cambiarDisponibilidadCochera(fila)" class="boton-disponibilidad">🚫</button>
-                <button (click)="eliminarFila(i, $event)" class="boton-disponibilidad">🗑</button>
+                <button (click)="eliminarFila(fila.id)" class="boton-disponibilidad">🗑</button>
                 <button *ngIf="!fila.deshabilitada && fila.descripcion !== 'Disponible'" (click)="cobrarEstacionamiento(fila.id)" class="boton-disponibilidad">💰</button>
             </div>   
         </div> 
