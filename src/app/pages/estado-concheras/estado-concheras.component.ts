@@ -56,6 +56,8 @@ export class EstadoConcherasComponent {
   }
   
   agregarFila() {
+    console.log('Botón de agregar fila presionado');
+
     Swal.fire({
       title: 'Ingrese el nombre de la cochera',
       input: 'text',
@@ -99,7 +101,6 @@ export class EstadoConcherasComponent {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Filtra las filas para eliminar la que tiene el 'id' que coincida
         this.filas = this.filas.filter(fila => fila.id !== id);
         Swal.fire('Eliminado', 'La fila ha sido eliminada.', 'success');
       }
@@ -111,7 +112,7 @@ export class EstadoConcherasComponent {
     const now = new Date();
     
     if (fila.deshabilitada) {
-      // Si la cochera está disponible, ingresar la patente
+
       Swal.fire({
         title: 'Ingrese la patente del vehículo',
         input: 'text',
@@ -138,7 +139,7 @@ export class EstadoConcherasComponent {
         }
       });
     } else {
-      // Si la cochera ya está ocupada, liberarla
+      
       this.estacionamientos.liberarCochera(fila.id).then(() => {
         fila.deshabilitada = true;
         fila.patente = undefined;

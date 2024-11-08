@@ -1,4 +1,5 @@
 export interface Estacionamiento {
+    length: number;
     estado: string;
     habilitada: any;
     id: number;

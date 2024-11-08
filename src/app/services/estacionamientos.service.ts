@@ -11,10 +11,10 @@ export class EstacionamientosService {
   auth = inject(AuthService);
 
   estacionamiento(): Promise<Estacionamiento[]> {
-    return fetch('http://localhost:4000/estacionamiento', {
+    return fetch('http://localhost:4000/estacionamientos', {
       method: 'GET',
       headers: {
-        Authorization: "Bearer" + (this.auth.getToken() ?? ''),
+        Authorization: "Bearer " + (this.auth.getToken() ?? ""),
       }
     }).then(r => r.json());
    }
@@ -33,58 +33,59 @@ export class EstacionamientosService {
    }
 
    estacionarAuto(patenteAuto: string, idCochera: number){
-    return fetch('http://localhost:4000/cocheras', {
+    return fetch('http://localhost:4000/estacionamientos/abrir', {
       method: 'POST',
       headers: {
-        authorization: "Bearer " + (this.auth.getToken() ?? ''),
+        authorization: "Bearer " + (this.auth.getToken() ?? ""),
         "content-type":"application/json"
       },
       body: JSON.stringify({
         patente: patenteAuto,
         idCochera: idCochera,
-        idUsaarioIngreso: "admin"
+        idUsuarioIngreso: "admin"
       })
     }).then(r=>r.json())
   }
 
-  cobrarEstacionamiento(idCochera: number, patente: string, precio: number) {
-    return fetch(`http://localhost:4000/cocheras/${idCochera}`, {
-      method: 'POST',
+  cobrarEstacionamiento(idCochera: number, patente: string, costo: number) {
+    return fetch('http://localhost:4000/estacionamientos/cerrar', {
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.auth.getToken(),
+        Authorization: "Bearer " + (this.auth.getToken() ?? ""),
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         idCochera: idCochera,
         patente: patente,
-        precio: precio
+        costo:costo 
       })
-    }).then(response => response.json())
-      .then(data => {
-        return data;
-      }).catch(error => {
-        console.error('Error al cobrar el estacionamiento:', error);
-        throw error;
-      });
+    }) .then(response => {
+      if (!response.ok) {
+        return response.json().then(error => {
+          throw new Error(error.message);
+        });
+      }
+      return response.json();
+    });
   }
 
   liberarCochera(idCochera: number) {
     return fetch ('http://localhost:4000/estacionamientos/cerrar', {
       method: 'PATCH',
       headers: {
-        'content-Type': 'application/json',
-        Authorization: 'Bearer ' + (this.auth.getToken() ?? ""),
-      
-      body: JSON.stringify({idCochera})
-    }}
-
-  ).then(response => {
-    if(response.ok){
-      Swal.fire('Cochera liberada', 'La cochera se libero con exito', 'success');
-    } else {
-      Swal.fire('Error', 'No se pudo liberar la cochera. Intente nuevamente', 'error');
-    }
-  })
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + (this.auth.getToken() ?? "")
+      },
+      body: JSON.stringify({ idCochera })
+    })
+    .then(response => {
+      if (response.ok) {
+        Swal.fire('Cochera liberada', 'La cochera se liberó con éxito', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo liberar la cochera. Intente nuevamente', 'error');
+      }
+    })
 }
+
   
 }

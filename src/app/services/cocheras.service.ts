@@ -6,32 +6,46 @@ import { Cochera } from '../interfaces/conchera';
   providedIn: 'root'
 })
 export class CocherasService {
-  updateCochera(id: number, fila: Cochera) {
-    throw new Error('Method not implemented.');
-  }
-
   auth = inject(AuthService);
-  http: any;
 
+  // Obtener todas las cocheras
   cocheras() {
     return fetch('http://localhost:4000/cocheras', {
       method: 'GET',
       headers: {
-        Authorization: "Bearer" + (this.auth.getToken() ?? ''),
+        Authorization: "Bearer " + (this.auth.getToken() ?? ''),
       }
     }).then(r => r.json());
-   }
-
-   agregarCochera(cochera: Cochera){
-    return this.http.post('http://localhost:4000/cocheras', cochera).toPromise();
-   }
-
-   eliminarCochera(id: number) {
-    return this.http.delete(`http://localhost:4000/cocheras/${id}`).toPromise();
   }
 
-  cambiarDisponibilidadCochera(cochera: Cochera, opcion: string) {
-    throw new Error('Method not implemented.');
-  }
+  // Agregar una cochera (POST)
+  agregarCochera(cochera: Cochera) {
+    const token = this.auth.getToken();
+    console.log('Token en agregarCochera:', token);  // Verifica que el token esté presente
+    
+    return fetch('http://localhost:4000/cocheras', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify(cochera)
+    }).then(response => response.json());
+}
+
+
+  // Eliminar cochera (DELETE)
+  eliminarCochera(id: number) {
+    const token = this.auth.getToken();
+    console.log('Token en eliminarCochera:', token);  // Verifica que el token esté presente
+    
+    return fetch(`http://localhost:4000/cocheras/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    }).then(response => response.json());
+}
+
   
 }
